@@ -92,8 +92,8 @@ def train_model(X_train, y_train, X_valid, y_valid, n_minibatches, batch_size, l
             acc_valid = agent.accuracy.eval(feed_dict={agent.X: X_valid[:100], agent.y: y_valid[:100]})
             tensorboard_eval.write_episode_data(epoch, {"loss": avg_loss, "acc_train": acc_train, "acc_valid": acc_valid})
             print("Epoch:",epoch+1, "Train accuracy:", acc_train, "valid accuracy:", acc_valid, "loss:", avg_loss) 
+            model_dir = agent.save(os.path.join(model_dir, "agent.ckpt"))
     
-    model_dir = agent.save(os.path.join(model_dir, "agent.ckpt"))
     tensorboard_eval.close_session()
     print("Model saved in file: %s" % model_dir)
 
