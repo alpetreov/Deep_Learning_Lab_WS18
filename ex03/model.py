@@ -61,12 +61,12 @@ class Model:
             Y_proba = tf.nn.softmax(logits, name="Y_proba")
         # TODO: Loss and optimizer
         with tf.name_scope("train"):
-            xentropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=y)
+            xentropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=self.y)
             self.loss = tf.reduce_mean(xentropy)
             self.optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(self.loss)
             
         with tf.name_scope("eval"):
-            pred_temp = tf.equal(tf.argmax(logits, 1), tf.argmax(y, 1))
+            pred_temp = tf.equal(tf.argmax(logits, 1), tf.argmax(self.y, 1))
             self.accuracy = tf.reduce_mean(tf.cast(pred_temp, tf.float32))
         
 
