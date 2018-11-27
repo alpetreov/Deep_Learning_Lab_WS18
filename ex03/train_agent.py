@@ -98,8 +98,9 @@ def train_model(X_train, y_train, X_valid, y_valid, n_minibatches, batch_size, l
 
 def sample_minibatch(X_train, y_train, iteration, batch_size):
     X_train_batch = X_train[iteration*batch_size:iteration*batch_size+batch_size]
-    y_train_batch = y_train[iteration*batch_size:iteration*batch_size+batch_size]
-    X_train_batch_p, y_train_batch_p = preprocessing(X_train_batch, y_train_batch)
+    
+    X_train_batch_p, y_train_batch = preprocessing(X_train_batch, y_train)
+    y_train_batch_p = y_train_batch[iteration*batch_size:iteration*batch_size+batch_size]
     return X_train_batch_p, y_train_batch_p
 
 if __name__ == "__main__":
