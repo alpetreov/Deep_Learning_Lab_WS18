@@ -63,7 +63,7 @@ class Model:
         with tf.name_scope("train"):
             xentropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=y)
             self.loss = tf.reduce_mean(xentropy)
-            optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
+            optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(self.loss)
             
         with tf.name_scope("eval"):
             pred_temp = tf.equal(tf.argmax(logits, 1), tf.argmax(y, 1))
