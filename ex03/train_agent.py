@@ -111,8 +111,8 @@ if __name__ == "__main__":
     X_train, y_train, X_valid, y_valid = read_data("./data")
 
     # preprocess data
-    #X_train, y_train, X_valid, y_valid = preprocessing(X_train[:100], y_train[:100], X_valid[:100], y_valid[:100], history_length=1)
+    X_train, y_train, X_valid, y_valid = preprocessing(X_train, y_train, X_valid, y_valid, history_length=1)
 
     # train model (you can change the parameters!)
-    #train_model(X_train, y_train, X_valid, n_minibatches=10, batch_size=50, lr=0.0001)
+    train_model(X_train, y_train, X_valid, n_minibatches=10, batch_size=50, lr=0.0001)
  
