@@ -36,9 +36,9 @@ class Model:
         
         # define placeholders
         with tf.name_scope("inputs"):
-            X = tf.placeholder(tf.float32, shape=[None, height, width], name = "X")
+            self.X = tf.placeholder(tf.float32, shape=[None, height, width], name = "X")
             X_reshaped = tf.reshape(X, shape=[-1,height,width,1])
-            y = tf.placeholder(tf.int32, shape = [None, output_num_units], name = "y")
+            self.y = tf.placeholder(tf.int32, shape = [None, output_num_units], name = "y")
 
         conv1 = tf.layers.conv2d(X_reshaped, filters=conv1_nfilters, kernel_size = conv1_ksize,
                                  strides = conv1_stride, padding=conv1_pad,

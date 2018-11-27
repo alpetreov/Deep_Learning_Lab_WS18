@@ -84,11 +84,11 @@ def train_model(X_train, y_train, X_valid, y_valid, n_minibatches, batch_size, l
         for iteration in range(num_examples // batch_size):
             #this cycle is for dividing step by step the heavy work of each neuron
             X_batch, y_batch = sample_minibatch(X_train, y_train, iteration, batch_size)
-            _, c = agent.sess.run([agent.optimizer, agent.loss], feed_dict={X: X_batch, y: y_batch})
+            _, c = agent.sess.run([agent.optimizer, agent.loss], feed_dict={agent.X: X_batch, agent.y: y_batch})
             avg_loss += c / (num_examples // batch_size)
             
-        acc_train = accuracy.eval(feed_dict={X: X_batch, y: y_batch})
-        acc_valid = accuracy.eval(feed_dict={X: X_valid, y: y_valid})
+        acc_train = agent.accuracy.eval(feed_dict={agent.X: X_batch, agent.y: y_batch})
+        acc_valid = agent.accuracy.eval(feed_dict={agent.X: X_valid, agent.y: y_valid})
         tensorboard_eval.write_episode_data(epoch, {"loss": avg_loss, "acc_train": acc_train, "acc_valid": acc_valid})
         print("Epoch:",epoch+1, "Train accuracy:", acc_train, "valid accuracy:", acc_valid, "loss:", avg_loss) 
     
