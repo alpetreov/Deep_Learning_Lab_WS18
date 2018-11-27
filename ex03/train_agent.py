@@ -70,7 +70,7 @@ def train_model(X_train, y_train, X_valid, y_valid, n_minibatches, batch_size, l
     tensorboard_eval = Evaluation(tensorboard_dir)
     
     # TODO: specify your neural network in model.py 
-    agent = Model(lr, tensorboard_eval.sess)
+    agent = Model(lr)
     
     num_examples = X_train.shape[0]
     X_valid, y_valid = preprocessing(X_valid, y_valid)
@@ -79,18 +79,19 @@ def train_model(X_train, y_train, X_valid, y_valid, n_minibatches, batch_size, l
     # 1. write a method sample_minibatch and perform an update step
     # 2. compute training/ validation accuracy and loss for the batch and visualize them with tensorboard. You can watch the progress of
     #    your training in your web browser
-    for epoch in range(n_minibatches):
-        avg_loss = 0
-        for iteration in range(num_examples // batch_size):
-            #this cycle is for dividing step by step the heavy work of each neuron
-            X_batch, y_batch = sample_minibatch(X_train, y_train, iteration, batch_size)
-            _, c = agent.sess.run([agent.optimizer, agent.loss], feed_dict={agent.X: X_batch, agent.y: y_batch})
-            avg_loss += c / (num_examples // batch_size)
-            
-        acc_train = agent.accuracy.eval(feed_dict={agent.X: X_batch, agent.y: y_batch})
-        acc_valid = agent.accuracy.eval(feed_dict={agent.X: X_valid, agent.y: y_valid})
-        tensorboard_eval.write_episode_data(epoch, {"loss": avg_loss, "acc_train": acc_train, "acc_valid": acc_valid})
-        print("Epoch:",epoch+1, "Train accuracy:", acc_train, "valid accuracy:", acc_valid, "loss:", avg_loss) 
+    with agent.sess:
+        for epoch in range(n_minibatches):
+            avg_loss = 0
+            for iteration in range(num_examples // batch_size):
+                #this cycle is for dividing step by step the heavy work of each neuron
+                X_batch, y_batch = sample_minibatch(X_train, y_train, iteration, batch_size)
+                _, c = agent.sess.run([agent.optimizer, agent.loss], feed_dict={agent.X: X_batch, agent.y: y_batch})
+                avg_loss += c / (num_examples // batch_size)
+                
+            acc_train = agent.accuracy.eval(feed_dict={agent.X: X_batch, agent.y: y_batch})
+            acc_valid = agent.accuracy.eval(feed_dict={agent.X: X_valid, agent.y: y_valid})
+            tensorboard_eval.write_episode_data(epoch, {"loss": avg_loss, "acc_train": acc_train, "acc_valid": acc_valid})
+            print("Epoch:",epoch+1, "Train accuracy:", acc_train, "valid accuracy:", acc_valid, "loss:", avg_loss) 
     
     model_dir = agent.save(os.path.join(model_dir, "agent.ckpt"))
     tensorboard_eval.close_session()

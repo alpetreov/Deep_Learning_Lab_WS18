@@ -3,7 +3,7 @@ import numpy as np
 
 class Model:
     
-    def __init__(self, lr, sess):
+    def __init__(self, lr):
         
         # TODO: Define network
         height = 96
@@ -74,7 +74,7 @@ class Model:
         with tf.name_scope("init_and_save"):
             init = tf.global_variables_initializer()
         
-        self.sess = sess;
+        self.sess = tf.Session();
         self.sess.run(init)
         self.saver = tf.train.Saver()
 
