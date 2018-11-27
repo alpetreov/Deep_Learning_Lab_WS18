@@ -8,8 +8,11 @@ class Evaluation:
         self.tf_writer = tf.summary.FileWriter(store_dir)
 
         self.tf_loss = tf.placeholder(tf.float32, name="loss_summary")
+        self.acc_train = tf.placeholder(tf.float32, name="acc_train_summary")
+        self.acc_valid = tf.placeholder(tf.float32, name="acc_valid_summary")
         tf.summary.scalar("loss", self.tf_loss)
-
+        tf.summary.scalar("acc_train", self.acc_train)
+        tf.summary.scalar("acc_valid", self.acc_valid)
         # TODO: define more metrics you want to plot during training (e.g. training/validation accuracy)
              
         self.performance_summaries = tf.summary.merge_all()
@@ -17,7 +20,9 @@ class Evaluation:
     def write_episode_data(self, episode, eval_dict):
         
        # TODO: add more metrics to the summary 
-       summary = self.sess.run(self.performance_summaries, feed_dict={self.tf_loss : eval_dict["loss"]})
+       summary = self.sess.run(self.performance_summaries, feed_dict={self.tf_loss : eval_dict["loss"],
+                                                                    self.acc_train : eval_dict["acc_train"],
+                                                                    self.acc_valid : eval_dict["acc_valid"]})
 
        self.tf_writer.add_summary(summary, episode)
        self.tf_writer.flush()
