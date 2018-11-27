@@ -73,7 +73,7 @@ def train_model(X_train, y_train, X_valid, y_valid, n_minibatches, batch_size, l
     agent = Model(lr, tensorboard_eval.sess)
     
     num_examples = X_train.shape[0]
-	X_valid, y_valid = preprocessing(X_valid, y_valid)
+    X_valid, y_valid = preprocessing(X_valid, y_valid)
     # TODO: implement the training
     # 
     # 1. write a method sample_minibatch and perform an update step
@@ -99,7 +99,7 @@ def train_model(X_train, y_train, X_valid, y_valid, n_minibatches, batch_size, l
 def sample_minibatch(X_train, y_train, iteration, batch_size):
     X_train_batch = X_train[iteration*batch_size:iteration*batch_size+batch_size]
     y_train_batch = y_train[iteration*batch_size:iteration*batch_size+batch_size]
-	X_train_batch_p, y_train_batch_p = preprocessing(X_train_batch, y_train_batch)
+    X_train_batch_p, y_train_batch_p = preprocessing(X_train_batch, y_train_batch)
     return X_train_batch_p, y_train_batch_p
 
 if __name__ == "__main__":
