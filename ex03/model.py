@@ -72,7 +72,7 @@ class Model:
 
         # TODO: Start tensorflow session
         with tf.name_scope("init_and_save"):
-            self.init = tf.global_variables_initializer()
+            init = tf.global_variables_initializer()
         
         self.sess = sess;
         self.sess.run(init)
