@@ -5,6 +5,10 @@ RIGHT = 2
 STRAIGHT = 0
 ACCELERATE =3
 BRAKE = 4
+RIGHT_AND_BRAKE = 5
+RIGHT_AND_ACC = 6
+LEFT_AND_BRAKE = 7
+LEFT_AND_ACC = 8
 
 def one_hot(labels):
     """
@@ -32,9 +36,22 @@ def action_to_id(a):
     """ 
     this method discretizes actions
     """
-    if all(a == [-1.0, 0.0, 0.0]): return LEFT               # LEFT: 1
-    elif all(a == [1.0, 0.0, 0.0]): return RIGHT             # RIGHT: 2
-    elif all(a == [0.0, 1.0, 0.0]): return ACCELERATE        # ACCELERATE: 3
-    elif all(a == [0.0, 0.0, 0.8]): return BRAKE             # BRAKE: 4
+    if all(a == [-1.0, 0.0, 0.0]):
+        return LEFT
+    elif all(a == [1.0, 0.0, 0.0]): 
+        return RIGHT
+    elif all(a == [0.0, 1.0, 0.0]): 
+        return ACCELERATE
+    elif all(a == [0.0, 0.0, np.float32(0.2)]): 
+        return BRAKE
+    elif all(a == [1.0, 0.0, np.float32(0.2)]):
+        # I am oversimplifiyng my action inputs to make everything easier
+        return RIGHT #return RIGHT_AND_BRAKE
+    elif all(a == [1.0, 1.0, 0.0]): 
+        return RIGHT #return RIGHT_AND_ACC
+    elif all(a == [-1.0, 0.0, np.float32(0.2)]): 
+        return LEFT #return LEFT_AND_BRAKE
+    elif all(a == [-1.0, 1.0, 0.0]): 
+        return LEFT #return LEFT_AND_ACC
     else:       
-        return STRAIGHT                                      # STRAIGHT = 0
+        return STRAIGHT                                        # STRAIGHT = 0
