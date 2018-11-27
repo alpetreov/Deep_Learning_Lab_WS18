@@ -73,7 +73,7 @@ def train_model(X_train, y_train, X_valid, y_valid, n_minibatches, batch_size, l
     agent = Model(lr)
     
     num_examples = X_train.shape[0]
-    X_valid[:100], y_valid[:100] = preprocessing(X_valid, y_valid)
+    X_valid, y_valid = preprocessing(X_valid, y_valid)
     # TODO: implement the training
     # 
     # 1. write a method sample_minibatch and perform an update step
@@ -89,7 +89,7 @@ def train_model(X_train, y_train, X_valid, y_valid, n_minibatches, batch_size, l
                 avg_loss += c / (num_examples // batch_size)
                 
             acc_train = agent.accuracy.eval(feed_dict={agent.X: X_batch, agent.y: y_batch})
-            acc_valid = agent.accuracy.eval(feed_dict={agent.X: X_valid, agent.y: y_valid})
+            acc_valid = agent.accuracy.eval(feed_dict={agent.X: X_valid[:100], agent.y: y_valid[:100]})
             tensorboard_eval.write_episode_data(epoch, {"loss": avg_loss, "acc_train": acc_train, "acc_valid": acc_valid})
             print("Epoch:",epoch+1, "Train accuracy:", acc_train, "valid accuracy:", acc_valid, "loss:", avg_loss) 
     
