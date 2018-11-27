@@ -73,7 +73,7 @@ def train_model(X_train, y_train, X_valid, y_valid, n_minibatches, batch_size, l
     agent = Model(lr)
     
     num_examples = X_train.shape[0]
-    X_valid, y_valid = preprocessing(X_valid, y_valid)
+    X_valid[:100], y_valid[:100] = preprocessing(X_valid, y_valid)
     # TODO: implement the training
     # 
     # 1. write a method sample_minibatch and perform an update step
