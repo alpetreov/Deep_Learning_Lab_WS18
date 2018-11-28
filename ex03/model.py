@@ -57,11 +57,12 @@ class Model:
                                   name = "fc1")
 
         with tf.name_scope("output"):
-            logits = tf.layers.dense(fc1, n_outputs, name = "output") # logits a.k.a. y_hat
-            Y_proba = tf.nn.softmax(logits, name="Y_proba")
+            self.logits = tf.layers.dense(fc1, n_outputs, name = "output") # logits a.k.a. y_hat
+            Y_proba = tf.nn.softmax(self.logits, name="Y_proba")
+            self.predict = tf.argmax(self.logits, 1)
         # TODO: Loss and optimizer
         with tf.name_scope("train"):
-            xentropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=self.y)
+            xentropy = tf.nn.softmax_cross_entropy_with_logits(logits=self.logits, labels=self.y)
             self.loss = tf.reduce_mean(xentropy)
             self.optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(self.loss)
             
