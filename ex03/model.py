@@ -67,7 +67,7 @@ class Model:
             self.optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(self.loss)
             
         with tf.name_scope("eval"):
-            pred_temp = tf.equal(tf.argmax(logits, 1), tf.argmax(self.y, 1))
+            pred_temp = tf.equal(tf.argmax(self.logits, 1), tf.argmax(self.y, 1))
             self.accuracy = tf.reduce_mean(tf.cast(pred_temp, tf.float32))
         
 
