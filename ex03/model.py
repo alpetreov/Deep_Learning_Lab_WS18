@@ -74,7 +74,7 @@ class Model:
                                  strides=conv4_stride, padding=conv4_pad,
                                  activation=tf.nn.relu, name="conv4")
         pool4 = tf.layers.max_pooling2d(inputs=conv4, pool_size=[2, 2], strides=2)
-        pool2_flat = tf.reshape(pool4, shape=[-1,conv2_nfilters*flat_height*flat_width])
+        pool2_flat = tf.reshape(pool4, shape=[-1,conv4_nfilters*flat_height*flat_width])
 
         fc1 = tf.layers.dense(pool2_flat, n_fc1, activation = tf.nn.relu,
                                   name = "fc1")
