@@ -25,12 +25,25 @@ class Model:
         conv2_stride = 1
         conv2_pad = 'SAME'
 
+        # 3rd conv layer
+        conv3_nfilters = 64
+        conv3_ksize = 3
+        conv3_stride = 1
+        conv3_pad = 'SAME'
+        
+        # 4th conv layer
+        conv4_nfilters = 128
+        conv4_ksize = 3
+        conv4_stride = 1
+        conv4_pad = 'SAME'
+        
         #parameters of fully connected network and outputs
-        n_fc1 = 64
+        n_fc1 = 1024
+        n_fc2 = 1024
         n_outputs = 5
-        flat_height = np.int32(height / 4) # division by 2 x number of max_pool layers
+        flat_height = np.int32(height / 16) # division by 2^number of max_pool layers
         print(flat_height)
-        flat_width = np.int32(width / 4) # division by 2 x number of max_pool layers
+        flat_width = np.int32(width / 16) # division by 2^number of max_pool layers
 
         learning_rate = lr
         
@@ -51,13 +64,24 @@ class Model:
                                  activation=tf.nn.relu, name="conv2")
 
         pool2 = tf.layers.max_pooling2d(inputs=conv2, pool_size=[2, 2], strides=2)
-        pool2_flat = tf.reshape(pool2, shape=[-1,conv2_nfilters*flat_height*flat_width])
+        
+        conv3 = tf.layers.conv2d(pool2, filters=conv3_nfilters, kernel_size=conv3_ksize,
+                                 strides=conv3_stride, padding=conv3_pad,
+                                 activation=tf.nn.relu, name="conv3")
+        pool3 = tf.layers.max_pooling2d(inputs=conv3, pool_size=[2, 2], strides=2)
+        
+        conv4 = tf.layers.conv2d(pool3, filters=conv4_nfilters, kernel_size=conv4_ksize,
+                                 strides=conv4_stride, padding=conv4_pad,
+                                 activation=tf.nn.relu, name="conv4")
+        pool4 = tf.layers.max_pooling2d(inputs=conv4, pool_size=[2, 2], strides=2)
+        pool2_flat = tf.reshape(pool4, shape=[-1,conv2_nfilters*flat_height*flat_width])
 
         fc1 = tf.layers.dense(pool2_flat, n_fc1, activation = tf.nn.relu,
                                   name = "fc1")
-
+        fc2 = tf.layers.dense(fc1, n_fc2, activation = tf.nn.relu,
+                                  name = "fc2")
         with tf.name_scope("output"):
-            self.logits = tf.layers.dense(fc1, n_outputs, name = "output") # logits a.k.a. y_hat
+            self.logits = tf.layers.dense(fc2, n_outputs, name = "output") # logits a.k.a. y_hat
             Y_proba = tf.nn.softmax(self.logits, name="Y_proba")
             self.predict = tf.argmax(self.logits, 1)
         # TODO: Loss and optimizer
