@@ -84,7 +84,10 @@ def train_model(X_train, y_train, X_valid, y_valid, n_minibatches, batch_size, l
             avg_loss = 0
             for iteration in range(num_examples // batch_size):
                 #this cycle is for dividing step by step the heavy work of each neuron
-                X_batch, y_batch = sample_minibatch(X_train, y_train, iteration, batch_size)
+                if uniform_flag:
+                    X_batch, y_batch = sampler.produce_random_batch(X_train, y_train, batch_size)
+                else:
+                    X_batch, y_batch = sample_minibatch(X_train, y_train, iteration, batch_size)
                 _, c = agent.sess.run([agent.optimizer, agent.loss], feed_dict={agent.X: X_batch, agent.y: y_batch})
                 avg_loss += c / (num_examples // batch_size)
                 
@@ -106,12 +109,16 @@ def sample_minibatch(X_train, y_train, iteration, batch_size):
     X_train_batch_p, y_train_batch = preprocessing(X_train_batch, y_train)
     y_train_batch_p = y_train_batch[iteration*batch_size:iteration*batch_size+batch_size]
     return X_train_batch_p, y_train_batch_p
-
+    
+    
 if __name__ == "__main__":
-
+    # uniform sampling flag
+    uniform_flag = True
     # read data    
     X_train, y_train, X_valid, y_valid = read_data("./data")
-
+    if uniform_flag:        
+        y_train = preprocessing_y(y_train)
+        sampler = Uniform_Sampling(y_train)
     # train model (you can change the parameters!)
-    train_model(X_train, y_train, X_valid, y_valid, n_minibatches=5, batch_size=100, lr=0.008)
+    train_model(X_train, y_train, X_valid, y_valid, n_minibatches=5, batch_size=100, lr=0.001)
  

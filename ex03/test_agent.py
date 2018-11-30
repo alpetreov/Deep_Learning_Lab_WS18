@@ -16,25 +16,29 @@ def run_episode(env, agent, rendering=True):
     step = 0
 
     state = env.reset()
-    while True:
+    with agent.sess:
+        while True:
         
-        # TODO: preprocess the state in the same way than in in your preprocessing in train_agent.py
-        #    state = ...
-        
-        # TODO: get the action from your agent! If you use discretized actions you need to transform them to continuous
-        # actions again. a needs to have a shape like np.array([0.0, 0.0, 0.0])
-        # a = ...
+            # TODO: preprocess the state in the same way than in in your preprocessing in train_agent.py
+            state = rgb2gray(state)
+            state = np.expand_dims(state, axis=0)
+            #print(step)
+            # TODO: get the action from your agent! If you use discretized actions you need to transform them to continuous
+            # actions again. a needs to have a shape like np.array([0.0, 0.0, 0.0])
+            
+            pred = agent.predict.eval(feed_dict={agent.X: state})
+            print(pred)
+            a = id_to_action(pred)    
+            next_state, r, done, info = env.step(a)   
+            episode_reward += r       
+            state = next_state
+            step += 1
+            
+            if rendering:
+                env.render()
 
-        next_state, r, done, info = env.step(a)   
-        episode_reward += r       
-        state = next_state
-        step += 1
-        
-        if rendering:
-            env.render()
-
-        if done: 
-            break
+            if done: 
+                break
 
     return episode_reward
 
@@ -46,8 +50,8 @@ if __name__ == "__main__":
     n_test_episodes = 10                  # number of episodes to test
 
     # TODO: load agent
-    # agent = Model(...)
-    # agent.load("models/agent.ckpt")
+    agent = Model(0.0001)
+    agent.load("models/agent.ckpt")
 
     env = gym.make('CarRacing-v0').unwrapped
 
