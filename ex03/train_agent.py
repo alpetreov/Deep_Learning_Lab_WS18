@@ -120,5 +120,5 @@ if __name__ == "__main__":
         y_train = preprocessing_y(y_train)
         sampler = Uniform_Sampling(y_train)
     # train model (you can change the parameters!)
-    train_model(X_train, y_train, X_valid, y_valid, n_minibatches=20, batch_size=100, lr=0.001)
+    train_model(X_train, y_train, X_valid, y_valid, n_minibatches=30, batch_size=100, lr=0.001)
  
