@@ -112,7 +112,7 @@ def sample_minibatch(X_train, y_train, iteration, batch_size):
 
 def sample_minibatch_history(X_train, y_train, iteration, batch_size, history):
     X_indx = []
-    for i in range(iteration*batch_size:iteration*batch_size+batch_size):
+    for i in range(iteration*batch_size,iteration*batch_size+batch_size):
         for h in range(history):        
             if i - h < 0:
                 X_indx.append(0)
