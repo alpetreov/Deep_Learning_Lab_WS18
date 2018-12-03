@@ -16,29 +16,29 @@ def run_episode(env, agent, rendering=True):
     step = 0
 
     state = env.reset()
-    with agent.sess:
-        while True:
+    
+    while True:
+    
+        # TODO: preprocess the state in the same way than in in your preprocessing in train_agent.py
+        state = rgb2gray(state)
+        state = np.expand_dims(state, axis=0)
+        #print(step)
+        # TODO: get the action from your agent! If you use discretized actions you need to transform them to continuous
+        # actions again. a needs to have a shape like np.array([0.0, 0.0, 0.0])
         
-            # TODO: preprocess the state in the same way than in in your preprocessing in train_agent.py
-            state = rgb2gray(state)
-            state = np.expand_dims(state, axis=0)
-            #print(step)
-            # TODO: get the action from your agent! If you use discretized actions you need to transform them to continuous
-            # actions again. a needs to have a shape like np.array([0.0, 0.0, 0.0])
-            
-            pred = agent.predict.eval(feed_dict={agent.X: state})
-            print(pred)
-            a = id_to_action(pred)    
-            next_state, r, done, info = env.step(a)   
-            episode_reward += r       
-            state = next_state
-            step += 1
-            
-            if rendering:
-                env.render()
+        pred = agent.predict.eval(feed_dict={agent.X: state})
+        print(pred)
+        a = id_to_action(pred)    
+        next_state, r, done, info = env.step(a)   
+        episode_reward += r       
+        state = next_state
+        step += 1
+        
+        if rendering:
+            env.render()
 
-            if done: 
-                break
+        if done: 
+            break
 
     return episode_reward
 
@@ -56,9 +56,10 @@ if __name__ == "__main__":
     env = gym.make('CarRacing-v0').unwrapped
 
     episode_rewards = []
-    for i in range(n_test_episodes):
-        episode_reward = run_episode(env, agent, rendering=rendering)
-        episode_rewards.append(episode_reward)
+    with agent.sess:
+        for i in range(n_test_episodes):        
+            episode_reward = run_episode(env, agent, rendering=rendering)
+            episode_rewards.append(episode_reward)
 
     # save results in a dictionary and write them into a .json file
     results = dict()
