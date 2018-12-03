@@ -60,7 +60,7 @@ def preprocessing(X_batch, y_batch, history_length=1):
     return X_prep, y_prep
 
 
-def train_model(X_train, y_train, X_valid, y_valid, n_minibatches, batch_size, lr, model_dir="./models", tensorboard_dir="./tensorboard"):
+def train_model(X_train, y_train, X_valid, y_valid, n_minibatches, batch_size, lr, history, model_dir="./models", tensorboard_dir="./tensorboard"):
     
     # create result and model folders
     if not os.path.exists(model_dir):
@@ -68,9 +68,9 @@ def train_model(X_train, y_train, X_valid, y_valid, n_minibatches, batch_size, l
 
     print("... train model")
     tensorboard_eval = Evaluation(tensorboard_dir)
-    
+
     # TODO: specify your neural network in model.py 
-    agent = Model(lr)
+    agent = Model(lr, history)
     
     num_examples = X_train.shape[0]
     #X_valid, y_valid = preprocessing(X_valid, y_valid)
@@ -85,7 +85,7 @@ def train_model(X_train, y_train, X_valid, y_valid, n_minibatches, batch_size, l
             for iteration in range(num_examples // batch_size):
                 #this cycle is for dividing step by step the heavy work of each neuron
                 if uniform_flag:
-                    X_batch, y_batch = sampler.produce_random_batch(X_train, y_train, batch_size)
+                    X_batch, y_batch = sampler.produce_random_batch_history(X_train, y_train, batch_size, history)
                 else:
                     X_batch, y_batch = sample_minibatch(X_train, y_train, iteration, batch_size)
                 _, c = agent.sess.run([agent.optimizer, agent.loss], feed_dict={agent.X: X_batch, agent.y: y_batch})
@@ -119,6 +119,7 @@ if __name__ == "__main__":
     if uniform_flag:        
         y_train = preprocessing_y(y_train)
         sampler = Uniform_Sampling(y_train)
+    history = 3
     # train model (you can change the parameters!)
-    train_model(X_train, y_train, X_valid, y_valid, n_minibatches=40, batch_size=100, lr=0.001)
+    train_model(X_train, y_train, X_valid, y_valid, n_minibatches=40, batch_size=100, lr=0.001, history=history)
  

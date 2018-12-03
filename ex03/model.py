@@ -3,7 +3,7 @@ import numpy as np
 
 class Model:
     
-    def __init__(self, lr):
+    def __init__(self, lr, history):
         
         # TODO: Define network
         height = 96
@@ -49,8 +49,12 @@ class Model:
         
         # define placeholders
         with tf.name_scope("inputs"):
-            self.X = tf.placeholder(tf.float32, shape=[None, height, width], name = "X")
-            X_reshaped = tf.reshape(self.X, shape=[-1,height,width,1])
+            if history != 1:
+                self.X = tf.placeholder(tf.float32, shape=[None, height, width, history], name = "X")
+                X_reshaped = self.X
+            else:
+                self.X = tf.placeholder(tf.float32, shape=[None, height, width], name = "X")
+                X_reshaped = tf.reshape(self.X, shape=[-1,height,width,1])
             self.y = tf.placeholder(tf.int32, shape = [None, output_num_units], name = "y")
 
         conv1 = tf.layers.conv2d(X_reshaped, filters=conv1_nfilters, kernel_size = conv1_ksize,
