@@ -94,7 +94,7 @@ def train_model(X_train, y_train, X_valid, y_valid, n_minibatches, batch_size, l
             acc_train = agent.accuracy.eval(feed_dict={agent.X: X_batch, agent.y: y_batch})
             acc_valid = 0
             for v in range(X_valid.shape[0] // batch_size):
-                X_batch, y_batch = sample_minibatch(X_valid, y_valid, v, batch_size)
+                X_batch, y_batch = sample_minibatch_history(X_valid, y_valid, v, batch_size, history)
                 acc = agent.accuracy.eval(feed_dict={agent.X: X_batch, agent.y: y_batch})
                 acc_valid += acc / (X_valid.shape[0] // batch_size)
             tensorboard_eval.write_episode_data(epoch, {"loss": avg_loss, "acc_train": acc_train, "acc_valid": acc_valid})
@@ -109,8 +109,21 @@ def sample_minibatch(X_train, y_train, iteration, batch_size):
     X_train_batch_p, y_train_batch = preprocessing(X_train_batch, y_train)
     y_train_batch_p = y_train_batch[iteration*batch_size:iteration*batch_size+batch_size]
     return X_train_batch_p, y_train_batch_p
+
+def sample_minibatch_history(X_train, y_train, iteration, batch_size, history):
+    X_indx = []
+    for i in range(iteration*batch_size:iteration*batch_size+batch_size):
+        for h in range(history):        
+            if i - h < 0:
+                X_indx.append(0)
+            else:
+                X_indx.append(i-h)
     
-    
+    X_train_batch_p = preprocessing_x(X_train[X_indx])
+    X_train_batch_p = np.reshape(X_train_batch_p, [-1,96,96,history])
+    y_train_batch = preprocessing_y(y_train)
+    y_train_batch_p = y_train_batch[iteration*batch_size:iteration*batch_size+batch_size]
+    return X_train_batch_p, y_train_batch_p
 if __name__ == "__main__":
     # uniform sampling flag
     uniform_flag = True

@@ -50,7 +50,7 @@ class Model:
         # define placeholders
         with tf.name_scope("inputs"):
             if history != 1:
-                self.X = tf.placeholder(tf.float32, shape=[None, height, width, None], name = "X")
+                self.X = tf.placeholder(tf.float32, shape=[None, height, width, history], name = "X")
                 X_reshaped = self.X
             else:
                 self.X = tf.placeholder(tf.float32, shape=[None, height, width], name = "X")

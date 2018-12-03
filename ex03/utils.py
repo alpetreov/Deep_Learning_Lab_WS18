@@ -134,27 +134,27 @@ class Uniform_Sampling:
                 new_indx = np.random.randint(history,len(self.indx_zero))
                 y_indx.append(self.indx_zero[new_indx])
                 for i in range(history):               
-                    X_indx.append(self.indx_zero[new_indx - i])
+                    X_indx.append(self.indx_zero[new_indx]  - i)
             elif indx_batch[i] == 1:
                 new_indx = np.random.randint(history,len(self.indx_one))
                 y_indx.append(self.indx_one[new_indx])
                 for i in range(history):
-                    X_indx.append(self.indx_one[new_indx-i])
+                    X_indx.append(self.indx_one[new_indx]-i)
             elif indx_batch[i] == 2:
                 new_indx = np.random.randint(history,len(self.indx_two))
                 y_indx.append(self.indx_two[new_indx])
                 for i in range(history):
-                    X_indx.append(self.indx_two[new_indx-i])
+                    X_indx.append(self.indx_two[new_indx] -i)
             elif indx_batch[i] == 3:
                 new_indx = np.random.randint(history,len(self.indx_three))
                 y_indx.append(self.indx_three[new_indx])
                 for i in range(history):
-                    X_indx.append(self.indx_three[new_indx])
+                    X_indx.append(self.indx_three[new_indx]-i)
             elif indx_batch[i] == 4:
                 new_indx = np.random.randint(history,len(self.indx_four))
                 y_indx.append(self.indx_four[new_indx])
                 for i in range(history):
-                    X_indx.append(self.indx_four[new_indx])
+                    X_indx.append(self.indx_four[new_indx]-i)
         X_return = preprocessing_x(X_train[X_indx])
         X_return = np.reshape(X_return, [-1,96,96,history])
         return X_return, y_train_p[y_indx]
