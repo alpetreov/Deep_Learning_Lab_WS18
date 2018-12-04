@@ -16,28 +16,30 @@ def run_episode(env, agent, rendering=True, max_timesteps=1000):
     step = 0
 
     state = env.reset()
-    history = 3
+    history = 5
     history_counter = 0
     state_list = []
     while True:
     
         # TODO: preprocess the state in the same way than in in your preprocessing in train_agent.py
         state = rgb2gray(state)
-        #state = np.expand_dims(state, axis=0)
-        if step == 0:
-            state_list.append(state)
-            state_list.append(state)
-            state_list.append(state)
-        else:
-            state_list.pop()
-            state_list.insert(0,state)
-        state_array = np.array(state_list)
-        state_array = np.reshape(state_array, [-1,96,96,3])
+        state = np.expand_dims(state, axis=0)
+        # if step == 0:
+            # state_list.append(state)
+            # state_list.append(state)
+            # state_list.append(state)
+            # state_list.append(state)
+            # state_list.append(state)
+        # else:
+            # state_list.pop()
+            # state_list.insert(0,state)
+        # state_array = np.array(state_list)
+        # state_array = np.reshape(state_array, [-1,96,96,5])
         #print(step)
         # TODO: get the action from your agent! If you use discretized actions you need to transform them to continuous
         # actions again. a needs to have a shape like np.array([0.0, 0.0, 0.0])
         
-        pred = agent.predict.eval(feed_dict={agent.X: state_array})
+        pred = agent.predict.eval(feed_dict={agent.X: state})
         print(pred)
         a = id_to_action(pred)    
         next_state, r, done, info = env.step(a)   
@@ -61,7 +63,7 @@ if __name__ == "__main__":
     n_test_episodes = 15                  # number of episodes to test
 
     # TODO: load agent
-    agent = Model(0.0001,3)
+    agent = Model(0.0001,1)
     agent.load("models/agent.ckpt")
 
     env = gym.make('CarRacing-v0').unwrapped
