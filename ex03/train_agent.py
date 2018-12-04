@@ -132,7 +132,7 @@ if __name__ == "__main__":
     if uniform_flag:        
         y_train = preprocessing_y(y_train)
         sampler = Uniform_Sampling(y_train)
-    history = 3
+    history = 5
     # train model (you can change the parameters!)
     train_model(X_train, y_train, X_valid, y_valid, n_minibatches=40, batch_size=100, lr=0.001, history=history)
  
